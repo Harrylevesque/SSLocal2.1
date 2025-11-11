@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+httpx
+pytest
+pytest-asyncio
+requests
+requests
+quantcrypt
+
