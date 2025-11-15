@@ -3,6 +3,7 @@ import base64
 import requests
 import quantcrypt.kem as qkem
 import quantcrypt.internal.pqa.kem_algos as algos
+from saving.userfiles import save_response_u
 
 try:
     # Example: if your discover is MLKEM_768.keygen()
@@ -36,3 +37,6 @@ try:
     print(resp.json())
 except ValueError:
     print(resp.text)
+
+
+save_response_u()
