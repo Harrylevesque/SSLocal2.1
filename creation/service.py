@@ -3,6 +3,8 @@ import base64
 import requests
 import quantcrypt.kem as qkem
 import quantcrypt.internal.pqa.kem_algos as algos
+from saving.userfiles import save_response_sv
+
 
 try:
     # Example: if your discover is MLKEM_768.keygen()
@@ -32,9 +34,12 @@ print(f"Public key length: {len(pub_bytes)} bytes")
 useruuid = input("Enter UUID: ")
 
 data = {"pubk": base64.b64encode(pub_bytes).decode()}
-resp = requests.post("http://localhost:8000/service/{useruuid}/service/new", json=data)
+resp = requests.post(f"http://localhost:8000/service/{useruuid}/service/new", json=data)
 print(resp.status_code)
 try:
     print(resp.json())
 except ValueError:
     print(resp.text)
+
+
+save_response_sv
