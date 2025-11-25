@@ -5,6 +5,9 @@ from typing import Optional
 import base64
 import requests
 
+servicefilelocation = "userfiles"
+
+
 
 def save_response_u(filename: Optional[str] = None, field: Optional[str] = None) -> None:
     from creation.serviceuser import get_user_creation_result
@@ -21,11 +24,16 @@ def save_response_u(filename: Optional[str] = None, field: Optional[str] = None)
     user_uuid = data.get("userUUID") or data.get("useruuid")
 
     if filename is None:
-        filename = f"{user_uuid}.json" if user_uuid else "response.json"
-    else:
-        dirpath = os.path.dirname(filename)
-        if dirpath:
-            os.makedirs(dirpath, exist_ok=True)
+        # build path portably and ensure parent directory exists
+        if user_uuid:
+            filename = os.path.join(".", servicefilelocation, f"{user_uuid}.json")
+        else:
+            filename = "response.json"
+
+    # ensure any parent dir exists before opening
+    dirpath = os.path.dirname(filename)
+    if dirpath:
+        os.makedirs(dirpath, exist_ok=True)
 
     with open(filename, "w") as f:
         if field:

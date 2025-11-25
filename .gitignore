@@ -1,0 +1,9 @@
+/userfiles
+.github/
+.idea/
+.vscode/
+__pycache__/
+app/__pycache__/
+creation/__pycache__/
+login/__pycache__/
+saving/__pycache__/
