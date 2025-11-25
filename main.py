@@ -2,6 +2,8 @@ from saving.userfiles import save_response_u, save_response_sv, save_response_sv
 from login.processor import login_processor
 
 
+serviceip = "http://localhost:8000"
+
 def tree():
     choice = input("Would you like to 1) Create or 2) Login: ").strip()
 

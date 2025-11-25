@@ -4,6 +4,8 @@ import requests
 import quantcrypt.kem as qkem
 import quantcrypt.internal.pqa.kem_algos as algos
 
+from main import serviceip
+
 try:
     # Example: if your discover is MLKEM_768.keygen()
     kp = algos.MLKEM_768()
@@ -33,7 +35,7 @@ print(f"Private key length: {len(priv_bytes)} bytes")
 print(f"Public key length: {len(pub_bytes)} bytes")
 
 data = {"pubk": base64.b64encode(pub_bytes).decode()}
-resp = requests.post("http://localhost:8000/serviceuser/new", json=data)
+resp = requests.post(f"http://{serviceip}/serviceuser/new", json=data)
 print(resp.status_code)
 try:
     print(resp.json())
