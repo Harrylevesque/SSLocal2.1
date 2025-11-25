@@ -1,38 +1,40 @@
-import sys
-import base64
-import requests
-import quantcrypt.kem as qkem
-import quantcrypt.internal.pqa.kem_algos as algos
+from saving.userfiles import save_response_u, save_response_sv, save_response_svu
+from login.processor import login_processor
 
-try:
-    # Example: if your discover is MLKEM_768.keygen()
-    kp = algos.MLKEM_768()
-    pubkey, privkey = kp.keygen()
-except Exception as e:
-    print(f"quantcrypt imported but could not generate keypair: {e}")
-    sys.exit(1)
 
-def to_bytes(x):
-    if isinstance(x, (bytes, bytearray, memoryview)):
-        return bytes(x)
-    if isinstance(x, str):
-        return x.encode()
-    raise TypeError("unexpected key type")
+def tree():
+    choice = input("Would you like to 1) Create or 2) Login: ").strip()
 
-try:
-    pub_bytes = to_bytes(pubkey)
-    priv_bytes = to_bytes(privkey)
-except TypeError as e:
-    print(f"Unexpected key types: {e}")
-    sys.exit(1)
+    if choice == "1":
+        create = input("Which save function to run? (u/sv/svu): ").strip().lower()
+        if create == "u":
+            save_response_u()
+        elif create == "sv":
+            save_response_sv()
+        elif create == "svu":
+            save_response_svu()
+        else:
+            print("Invalid choice, please try again.")
+            tree()
 
-print(f"Private key length: {len(priv_bytes)} bytes")
-print(f"Public key length: {len(pub_bytes)} bytes")
+    elif choice == "2":
+        sv_uuid = input("What is the service UUID to login to?: ").strip()
+        if sv_uuid == "":
+            print("Service UUID cannot be empty.")
+            tree()
+            return
+        svu_uuid = input("What is the account UUID to login to?: ").strip()
+        if sv_uuid == "":
+            print("Account UUID cannot be empty.")
+            tree()
+            return
 
-data = {"pubk": base64.b64encode(pub_bytes).decode()}
-resp = requests.post("http://localhost:8000/serviceuser/new", json=data)
-print(resp.status_code)
-try:
-    print(resp.json())
-except ValueError:
-    print(resp.text)
+        login_processor(sv_uuid, svu_uuid)
+
+    else:
+        print("Invalid choice, please try again.")
+        tree()
+
+
+if __name__ == "__main__":
+    tree()

@@ -3,7 +3,6 @@ import base64
 import requests
 import quantcrypt.kem as qkem
 import quantcrypt.internal.pqa.kem_algos as algos
-from saving.userfiles import save_response_svu
 
 
 try:
@@ -14,12 +13,14 @@ except Exception as e:
     print(f"quantcrypt imported but could not generate keypair: {e}")
     sys.exit(1)
 
+
 def to_bytes(x):
     if isinstance(x, (bytes, bytearray, memoryview)):
         return bytes(x)
     if isinstance(x, str):
         return x.encode()
     raise TypeError("unexpected key type")
+
 
 try:
     pub_bytes = to_bytes(pubkey)
@@ -28,10 +29,12 @@ except TypeError as e:
     print(f"Unexpected key types: {e}")
     sys.exit(1)
 
+
 print(f"Private key length: {len(priv_bytes)} bytes")
 print(f"Public key length: {len(pub_bytes)} bytes")
 
 serviceuuid = input("Enter service UUID: ")
+
 
 data = {"pubk": base64.b64encode(pub_bytes).decode()}
 resp = requests.post(f"http://localhost:8000/service/{serviceuuid}/user/new", json=data)
@@ -42,4 +45,14 @@ except ValueError:
     print(resp.text)
 
 
-save_response_svu()
+def get_svu_creation_result():
+    """Helper to expose resp, serviceuuid and privkey without importing saving.userfiles.
+
+    This is used by saving.userfiles.save_response_svu to avoid a circular import.
+    """
+    return resp, serviceuuid, privkey
+
+
+if __name__ == "__main__":
+    # When run directly, just execute the request/prints. Saving is triggered from saving.userfiles.
+    pass

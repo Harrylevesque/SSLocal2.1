@@ -3,7 +3,6 @@ import base64
 import requests
 import quantcrypt.kem as qkem
 import quantcrypt.internal.pqa.kem_algos as algos
-from saving.userfiles import save_response_u
 
 try:
     # Example: if your discover is MLKEM_768.keygen()
@@ -13,6 +12,7 @@ except Exception as e:
     print(f"quantcrypt imported but could not generate keypair: {e}")
     sys.exit(1)
 
+
 def to_bytes(x):
     if isinstance(x, (bytes, bytearray, memoryview)):
         return bytes(x)
@@ -20,12 +20,14 @@ def to_bytes(x):
         return x.encode()
     raise TypeError("unexpected key type")
 
+
 try:
     pub_bytes = to_bytes(pubkey)
     priv_bytes = to_bytes(privkey)
 except TypeError as e:
     print(f"Unexpected key types: {e}")
     sys.exit(1)
+
 
 print(f"Private key length: {len(priv_bytes)} bytes")
 print(f"Public key length: {len(pub_bytes)} bytes")
@@ -39,4 +41,11 @@ except ValueError:
     print(resp.text)
 
 
-save_response_u()
+def get_user_creation_result():
+    """Expose resp and privkey for saving.userfiles without importing it here."""
+    return resp, privkey
+
+
+if __name__ == "__main__":
+    # When run directly, just execute the request and print; saving is handled from saving.userfiles.
+    pass
