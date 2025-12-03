@@ -39,7 +39,7 @@ serviceuuid = input("Enter service UUID: ")
 
 
 data = {"pubk": base64.b64encode(pub_bytes).decode()}
-resp = requests.post(f"http://{serviceip}/service/{serviceuuid}/user/new", json=data)
+resp = requests.post(f"{serviceip}/service/{serviceuuid}/user/new", json=data)
 print(resp.status_code)
 try:
     print(resp.json())
