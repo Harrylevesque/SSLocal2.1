@@ -31,7 +31,7 @@ def tree():
             tree()
             return
 
-        login_processor(sv_uuid, svu_uuid)
+        login_processor(sv_uuid, svu_uuid, serviceip)
 
     else:
         print("Invalid choice, please try again.")
